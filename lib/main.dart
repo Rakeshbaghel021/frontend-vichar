@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vichar_frontend/features/landing/pages/landing_page.dart';
+import 'package:vichar_frontend/core/router/app_router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,11 +10,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Vichar',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: LandingPage(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      routerConfig: AppRouter.router,
     );
   }
 }
