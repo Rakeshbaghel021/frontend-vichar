@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:vichar_frontend/features/home/page/home_page.dart';
 import 'package:vichar_frontend/features/landing/pages/landing_page.dart';
 import 'package:vichar_frontend/features/our_story/our_story_page.dart';
 
@@ -11,6 +12,7 @@ class AppRouter {
         path: "/our-story",
         builder: (context, state) => const OurStoryPage(),
       ),
+      GoRoute(path: "/home", builder: (context, state) => const HomePage()),
     ],
   );
 }

@@ -53,7 +53,6 @@ class LandingHeader extends StatelessWidget {
           if (!isMobile) ...[
             _menuItem(context, "Our Story", () => context.go("/our-story")),
             _menuItem(context, "Write", () => context.go("/write")),
-
             _menuItem(context, "Free", () {}),
             const SizedBox(width: 20),
             TextButton(

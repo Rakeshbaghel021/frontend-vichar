@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthDialogConfig {
   final String title;
@@ -115,7 +116,9 @@ class VicharAuthDialog extends StatelessWidget {
                 child: _socialButton(
                   icon: Icons.g_mobiledata,
                   text: "Continue with Google",
-                  onTap: () {},
+                  onTap: () {
+                    context.go("/home");
+                  },
                 ),
               ),
               const SizedBox(height: 12),

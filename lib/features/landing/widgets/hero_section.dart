@@ -16,46 +16,41 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool isMobile = width < 700;
-    final bool isTablet = width >= 700 && width < 1100;
+    final size = MediaQuery.of(context).size;
+    final bool isMobile = size.width < 700;
+    final bool isTablet = size.width >= 700 && size.width < 1100;
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 90,
-        vertical: isMobile ? 50 : 150,
-      ),
+      width: double.infinity,
+      height: size.height,
       decoration: BoxDecoration(
         color: AppColor.mainColor,
         border: const Border(
           bottom: BorderSide(color: Colors.grey, width: 0.5),
         ),
       ),
-      child: isMobile
-          ? _mobileLayout(context)
-          : _desktopLayout(context, isTablet),
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 24 : 90,
+            vertical: isMobile ? 40 : 80,
+          ),
+          child: isMobile
+              ? _mobileLayout(context)
+              : _desktopLayout(context, isTablet),
+        ),
+      ),
     );
   }
 
   Widget _desktopLayout(BuildContext context, bool isTablet) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(flex: 5, child: _textContent(context, isTablet: isTablet)),
+        Expanded(flex: 5, child: Center(child: _textContent(context))),
         const SizedBox(width: 40),
         Expanded(
           flex: 6,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Center(
-                child: SizedBox(
-                  height: constraints.maxHeight * 0.95,
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Image.asset("assets/image/hero.png"),
-                  ),
-                ),
-              );
-            },
+          child: Center(
+            child: Image.asset("assets/image/hero.png", fit: BoxFit.contain),
           ),
         ),
       ],
@@ -63,49 +58,39 @@ class HeroSection extends StatelessWidget {
   }
 
   Widget _mobileLayout(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final padding = width < 400 ? 24.0 : 48.0;
-    return SizedBox.expand(
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: _textContent(context, center: true),
-        ),
-      ),
+    return Center(
+      child: SingleChildScrollView(child: _textContent(context, center: true)),
     );
   }
 
-  Widget _textContent(
-    BuildContext context, {
-    bool isTablet = false,
-    bool center = false,
-  }) {
+  Widget _textContent(BuildContext context, {bool center = false}) {
     final screenWidth = MediaQuery.of(context).size.width;
     final double titleSize = screenWidth > 1400
-        ? 96.0
+        ? 96
         : screenWidth > 1100
-        ? 80.0
+        ? 80
         : screenWidth > 800
-        ? 64.0
-        : 68.0;
+        ? 64
+        : 48;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: center
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
         Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: center
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
           children: [
             FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: center ? Alignment.center : Alignment.centerLeft,
               child: Text(
                 "Vichar",
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.visible,
                 textAlign: center ? TextAlign.center : TextAlign.start,
                 style: TextStyle(
                   fontSize: titleSize,
@@ -118,31 +103,32 @@ class HeroSection extends StatelessWidget {
             const SizedBox(height: 10),
             FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: center ? Alignment.center : Alignment.centerLeft,
               child: Text(
                 "Soch & Kathayen",
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.visible,
                 textAlign: center ? TextAlign.center : TextAlign.start,
                 style: TextStyle(
-                  fontSize: titleSize,
+                  fontSize: titleSize * 0.9,
                   fontWeight: FontWeight.w900,
-                  height: 1.2,
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 20),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
           child: RichText(
             textAlign: center ? TextAlign.center : TextAlign.start,
-            text: TextSpan(
-              style: const TextStyle(
+            text: const TextSpan(
+              style: TextStyle(
                 fontSize: 18,
                 height: 1.6,
                 color: Colors.black54,
               ),
-              children: const [
+              children: [
                 TextSpan(text: "A platform "),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
@@ -150,7 +136,7 @@ class HeroSection extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 4),
                     child: Icon(
                       Icons.edit_outlined,
-                      size: 15,
+                      size: 16,
                       color: Colors.black,
                     ),
                   ),
@@ -165,41 +151,51 @@ class HeroSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 35),
-        Wrap(
-          alignment: center ? WrapAlignment.center : WrapAlignment.start,
-          spacing: 16,
-          runSpacing: 12,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: center
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () => openAuthDialog(context, false),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 28,
-                  vertical: 18,
+            Flexible(
+              child: ElevatedButton(
+                onPressed: () => openAuthDialog(context, false),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 18,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                child: const Text(
+                  "Start Reading",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white),
                 ),
-              ),
-              child: const Text(
-                "Start Reading",
-                style: TextStyle(color: Colors.white),
               ),
             ),
-            OutlinedButton(
-              onPressed: () => openAuthDialog(context, false),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 28,
-                  vertical: 18,
+            const SizedBox(width: 16),
+            Flexible(
+              child: OutlinedButton(
+                onPressed: () => openAuthDialog(context, false),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 18,
+                  ),
+                  side: const BorderSide(color: Colors.black),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
-                side: const BorderSide(color: Colors.black),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                child: const Text(
+                  "Start Writing",
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              child: const Text("Start Writing"),
             ),
           ],
         ),

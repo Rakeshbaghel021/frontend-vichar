@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vichar_frontend/core/app_color.dart';
+import 'package:vichar_frontend/features/landing/widgets/footer_section.dart';
+import 'package:vichar_frontend/features/landing/widgets/vichar_auth_dialog.dart';
 
 class OurStoryPage extends StatelessWidget {
   const OurStoryPage({super.key});
+  void openSignup(BuildContext context) {
+    showVicharAuthDialog(
+      context,
+      config: AuthDialogConfig.signup(() => openSignin(context)),
+    );
+  }
+
+  void openSignin(BuildContext context) {
+    showVicharAuthDialog(
+      context,
+      config: AuthDialogConfig.signin(() => openSignup(context)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,39 +27,108 @@ class OurStoryPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColor.mainColor,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            width: isMobile ? double.infinity : 760,
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 24 : 0,
-              vertical: 80,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                _HeaderSection(),
-                SizedBox(height: 60),
-                _StorySection(),
-              ],
+      body: Column(
+        children: [
+          _StoryHeader(
+            onSignin: () => openSignin(context),
+            onSignup: () => openSignup(context),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Container(
+                  width: isMobile ? double.infinity : 760,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 24 : 0,
+                    vertical: 80,
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _HeaderSection(),
+                      SizedBox(height: 60),
+                      _StorySection(),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
+          FooterSection(),
+        ],
       ),
     );
   }
 }
 
-/// ================= HEADER =================
+class _StoryHeader extends StatelessWidget {
+  final VoidCallback onSignin;
+  final VoidCallback onSignup;
+  const _StoryHeader({required this.onSignin, required this.onSignup});
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final bool isMobile = width < 700;
+    return Container(
+      color: Colors.black,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : 90,
+        vertical: 18,
+      ),
+      child: Row(
+        children: [
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => context.go("/"),
+              child: const Text(
+                "Vichar",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
+          ),
+          const Spacer(),
+          TextButton(
+            onPressed: onSignin,
+            child: const Text(
+              "Sign In",
+              style: TextStyle(color: Colors.white70, fontSize: 15),
+            ),
+          ),
+          const SizedBox(width: 12),
+          ElevatedButton(
+            onPressed: onSignup,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(22),
+              ),
+              elevation: 0,
+            ),
+            child: const Text("Sign Up"),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _HeaderSection extends StatelessWidget {
   const _HeaderSection();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           "Our Story",
           style: TextStyle(
@@ -62,8 +147,6 @@ class _HeaderSection extends StatelessWidget {
   }
 }
 
-/// ================= STORY CONTENT =================
-
 class _StorySection extends StatelessWidget {
   const _StorySection();
 
@@ -80,9 +163,7 @@ class _StorySection extends StatelessWidget {
             height: 1.6,
           ),
         ),
-
         SizedBox(height: 28),
-
         Text(
           "In a world filled with short attention spans and endless scrolling, "
           "deep thinking and meaningful storytelling often get lost. "
@@ -95,16 +176,12 @@ class _StorySection extends StatelessWidget {
           "and read thoughtfully.",
           style: TextStyle(fontSize: 18, height: 1.9, color: Colors.black87),
         ),
-
         SizedBox(height: 40),
-
         Text(
           "Our Mission",
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
-
         SizedBox(height: 16),
-
         Text(
           "To build a community where ideas grow, stories inspire, "
           "and thoughtful conversations shape the future.",
