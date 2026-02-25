@@ -9,7 +9,7 @@ class ArticleFeed extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.only(top: 20),
       itemCount: 6,
-      separatorBuilder: (_, __) => const Divider(),
+      separatorBuilder: (_, _) => const Divider(),
       itemBuilder: (_, i) => const ArticleCard(),
     );
   }

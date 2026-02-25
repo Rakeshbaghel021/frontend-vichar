@@ -6,8 +6,15 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final double searchWidth = width > 1400
+        ? 520
+        : width > 1000
+        ? 420
+        : double.infinity;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 54, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 14),
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(color: Colors.black12)),
@@ -18,26 +25,31 @@ class HomeHeader extends StatelessWidget {
             "Vichar",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 24),
           Expanded(
-            child: Container(
-              height: 42,
-              decoration: BoxDecoration(
-                color: AppColor.mainColor,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.black12, width: .5),
-              ),
-              child: TextField(
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  hintText: "Search articles",
-                  hintStyle: const TextStyle(color: Colors.black54),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    size: 20,
-                    color: Colors.black54,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: searchWidth),
+                child: Container(
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColor.mainColor,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Colors.black12, width: 0.6),
+                  ),
+                  child: TextField(
+                    cursorColor: Colors.black,
+                    decoration: const InputDecoration(
+                      hintText: "Search articles",
+                      hintStyle: TextStyle(color: Colors.black54),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
                   ),
                 ),
               ),
